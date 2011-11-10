@@ -508,7 +508,8 @@
 													pos (479,1045)
 													label (object ItemLabel
 														quid "4E9A9DC201F3"
-														pos (519,1075))))
+														pos (519,1075)
+														max_width 244)))
 											(object JuncPtVw ":TOP:Consumo:J4E9A9DC201F5" @15
 												quid "4E9A9DC201F6"
 												pos (95,735)
@@ -518,7 +519,8 @@
 													pos (185,735)
 													label (object ItemLabel
 														quid "4E9A9DC201F8"
-														pos (155,775))))
+														pos (155,775)
+														max_width 244)))
 											(object JuncPtVw ":TOP:Consumo:J4E9B49FF02E4" @17
 												quid "4E9B49FF02E5"
 												pos (95,591)
@@ -528,7 +530,8 @@
 													pos (185,591)
 													label (object ItemLabel
 														quid "4E9B49FF02E7"
-														pos (155,631))))))
+														pos (155,631)
+														max_width 125)))))
 									(object StateView "StartState" "Initial" @19
 										quid "4E9A9D9403D5"
 										pos (180,180)
@@ -667,7 +670,7 @@
 										pos (797,132)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 125
+										max_width 144
 										label "ordem")
 									positionBySuperclass FALSE)
 								(object PortVw ":Structure:validacao" @37
@@ -679,7 +682,7 @@
 										pos (150,1024)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 171
+										max_width 197
 										label "validacao")
 									positionBySuperclass FALSE)
 								(object PortVw ":Structure:consumoPort" @38
@@ -691,7 +694,7 @@
 										pos (105,248)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 214
+										max_width 247
 										label "consumoPort")
 									positionBySuperclass FALSE)
 								(object PortVw ":Structure:tipoPort" @39
@@ -703,7 +706,7 @@
 										pos (105,424)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 179
+										max_width 206
 										label "tipoPort")
 									positionBySuperclass FALSE)
 								(object PortVw ":Structure:idComodoPort" @40
@@ -715,7 +718,7 @@
 										pos (105,616)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 225
+										max_width 259
 										label "idComodoPort")
 									positionBySuperclass FALSE)
 								(object PortVw ":Structure:idPCPort" @41
@@ -727,7 +730,7 @@
 										pos (105,808)
 										positionBySuperclass FALSE
 										nlines 2
-										max_width 179
+										max_width 206
 										label "idPCPort")
 									positionBySuperclass FALSE)))
 						(object PortVw ":Structure:timer" @42
@@ -739,7 +742,7 @@
 								pos (813,504)
 								positionBySuperclass FALSE
 								nlines 2
-								max_width 108
+								max_width 125
 								label "timer")
 							positionBySuperclass FALSE))
 					filterFlags 521))
@@ -753,7 +756,7 @@
 |#include <stdio.h>
 |#include<stdlib.h>
 |#include <fstream.h>
-| #include <string.h>
+|#include <string.h>
 |#include <conio.h>
 						))
 					(object Attribute
@@ -890,48 +893,50 @@
 |cin >> numeroDeUsuarios;
 |printf("\n");
 |
-|pa = fopen(nomeUser, "w+");
-|
-|for(int j = 0; j < numeroDeUsuarios ;j++)
+|if ((pa = fopen(nomeUser, "r")) != NULL)
 |{
-|	cout << "Cadastro do usuario " << j + 1<<"."<< endl;
-|	cout << "Nome: ";
-|	cin >> nomeCadastro; 
+|	pa = fopen(nomeUser, "w+");
+|
+|	for(int j = 0; j < numeroDeUsuarios ;j++)
+|	{
+|		cout << "Cadastro do usuario " << j + 1<<"."<< endl;
+|		cout << "Nome: ";
+|		cin >> nomeCadastro; 
 |    
 |
-|	rewind(pa);
-|	while (!feof(pa)) 
-|	{
-|	   fscanf (pa, "%s", linha);
-|	   if(strcmp(linha, nomeCadastro)==0) 
-|	   {
-|			cout << "Esse usuario ja esta cadastrado. Entre com novo nome !" << endl;
-|			printf("\n");
-|			cout << "Cadastro do usuario " << j + 1<<"."<< endl;
-|			cout << "Nome: ";
-|			cin >> nomeCadastro;
-|			rewind(pa); 
-|	   }
+|		rewind(pa);
+|		while (!feof(pa)) 
+|		{
+|		   fscanf (pa, "%s", linha);
+|		   if(strcmp(linha, nomeCadastro)==0) 
+|		   {
+|				cout << "Esse usuario ja esta cadastrado. Entre com novo nome !" << endl;
+|				printf("\n");
+|				cout << "Cadastro do usuario " << j + 1<<"."<< endl;
+|				cout << "Nome: ";
+|				cin >> nomeCadastro;
+|				rewind(pa); 
+|		   }
 |   
+|		}
+|
+|		fputs(nomeCadastro, pa);
+|		fprintf(pa, "\n"); 
+|
+|		cout << "Senha: ";
+|		cin >> senhaCadastro;
+|	    fputs(senhaCadastro, pa); 
+|		fprintf(pa, "\n"); 
+|	    cout << "Usuario " << nomeCadastro<< " cadastrado." << endl;
+|		printf("\n");
 |	}
 |
-|	fputs(nomeCadastro, pa);
-|	fprintf(pa, "\n"); 
+|	if (numeroDeUsuarios == 0);
+|	else if(numeroDeUsuarios == 1) cout << "Usuario cadastrado!" << endl;
+|	else cout << "Usuarios cadastrados!" << endl;
 |
-|	cout << "Senha: ";
-|	cin >> senhaCadastro;
-|    fputs(senhaCadastro, pa); 
-|	fprintf(pa, "\n"); 
-|    cout << "Usuario " << nomeCadastro<< " cadastrado." << endl;
 |	printf("\n");
 |}
-|
-|if (numeroDeUsuarios == 0);
-|else if(numeroDeUsuarios == 1) cout << "Usuario cadastrado!" << endl;
-|else cout << "Usuarios cadastrados!" << endl;
-|
-|printf("\n");
-|
 |
 |
 |char nomeUsuario [50];
@@ -1283,7 +1288,7 @@
 													label (object ItemLabel
 														quid "4E9A9F960202"
 														pos (935,1075)
-														max_width 231)))
+														max_width 319)))
 											(object JuncPtVw ":TOP:Processamento:J4E9A9F960204" @60
 												quid "4E9A9F960205"
 												pos (447,1135)
@@ -1294,7 +1299,7 @@
 													label (object ItemLabel
 														quid "4E9A9F960207"
 														pos (487,1075)
-														max_width 231)))
+														max_width 319)))
 											(object JuncPtVw ":TOP:Processamento:J4E9BC69A019A" @62
 												quid "4E9BC69A019B"
 												pos (895,95)
@@ -1370,7 +1375,8 @@
 													pos (185,831)
 													label (object ItemLabel
 														quid "4EAB89540117"
-														pos (155,871))))
+														pos (155,871)
+														max_width 125)))
 											(object JuncPtVw ":TOP:Processamento:J4EAC47F20261" @76
 												quid "4EAC47F20262"
 												pos (1583,319)
@@ -1380,7 +1386,8 @@
 													pos (1493,319)
 													label (object ItemLabel
 														quid "4EAC47F20264"
-														pos (1523,359))))
+														pos (1523,359)
+														max_width 244)))
 											(object JuncPtVw ":TOP:Processamento:J4EAC9D9C0354" @78
 												quid "4EAC9D9C0355"
 												pos (1583,447)
@@ -1390,7 +1397,8 @@
 													pos (1493,447)
 													label (object ItemLabel
 														quid "4EAC9D9C0357"
-														pos (1523,487))))))
+														pos (1523,487)
+														max_width 244)))))
 									(object StateView "StartState" "Initial" @80
 										quid "4E9A9F8E0379"
 										pos (180,180)
@@ -1428,24 +1436,30 @@
 												quid "4EAB89540110"
 												pos (1584,367)
 												quidu "4EAB8954010B"
+												positionBySuperclass FALSE
 												juncPtIcon (object JuncPtIcon @86
 													quid "4EAB89540111"
 													pos (1494,367)
 													label (object ItemLabel
 														quid "4EAB89540112"
 														pos (1524,407)
-														max_width 125)))
+														positionBySuperclass FALSE
+														max_width 125)
+													positionBySuperclass FALSE))
 											(object JuncPtVw ":TOP:Validacao:J4EAB89620030" @87
 												quid "4EAB89620031"
 												pos (383,96)
 												quidu "4EAB89620030"
+												positionBySuperclass FALSE
 												juncPtIcon (object JuncPtIcon @88
 													quid "4EAB89620032"
 													pos (383,186)
 													label (object ItemLabel
 														quid "4EAB89620033"
 														pos (423,156)
-														max_width 75)))))
+														positionBySuperclass FALSE
+														max_width 75)
+													positionBySuperclass FALSE))))
 									(object StateView "StartState" "Initial" @89
 										quid "4EAB8954010F"
 										pos (180,180)
@@ -1457,10 +1471,12 @@
 										label (object SegLabel @91
 											quid "4EAB8B57003E"
 											pos (938,275)
+											positionBySuperclass FALSE
 											max_width 75
 											pctDist 0.500462
 											height 0
 											orientation 1)
+										positionBySuperclass FALSE
 										client @88
 										supplier @86
 										vertices (list Points
@@ -2654,11 +2670,13 @@
 									quid "4EAC3DA20236"
 									pos (1055,1151)
 									quidu "4EAC3DA20232"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Conectado:J4EAC3DA20237" @177
 									quid "4EAC3DA2023B"
 									pos (767,1151)
 									quidu "4EAC3DA20237"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Conectado:J4EAC40190117" @178
 									quid "4EAC40190127"
@@ -2704,7 +2722,8 @@
 													pos (591,185)
 													label (object ItemLabel
 														quid "4EAC3D8F0255"
-														pos (631,155))))
+														pos (631,155)
+														max_width 216)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC3D8F0257" @186
 												quid "4EAC3D8F025F"
 												pos (1087,95)
@@ -2714,7 +2733,8 @@
 													pos (1087,185)
 													label (object ItemLabel
 														quid "4EAC3D8F0261"
-														pos (1127,155))))
+														pos (1127,155)
+														max_width 216)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC3D980127" @188
 												quid "4EAC3D980128"
 												pos (95,927)
@@ -2724,7 +2744,8 @@
 													pos (185,927)
 													label (object ItemLabel
 														quid "4EAC3D98012A"
-														pos (155,967))))
+														pos (155,967)
+														max_width 203)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC3D98012C" @190
 												quid "4EAC3D98012D"
 												pos (95,463)
@@ -2734,7 +2755,8 @@
 													pos (185,463)
 													label (object ItemLabel
 														quid "4EAC3D98012F"
-														pos (155,503))))
+														pos (155,503)
+														max_width 203)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC3DA20232" @192
 												quid "4EAC3DA20233"
 												pos (1183,1135)
@@ -2744,7 +2766,8 @@
 													pos (1183,1045)
 													label (object ItemLabel
 														quid "4EAC3DA20235"
-														pos (1223,1075))))
+														pos (1223,1075)
+														max_width 278)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC3DA20237" @194
 												quid "4EAC3DA20238"
 												pos (591,1135)
@@ -2754,7 +2777,8 @@
 													pos (591,1045)
 													label (object ItemLabel
 														quid "4EAC3DA2023A"
-														pos (631,1075))))
+														pos (631,1075)
+														max_width 278)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC40190117" @196
 												quid "4EAC40190118"
 												pos (1295,95)
@@ -2764,7 +2788,8 @@
 													pos (1295,185)
 													label (object ItemLabel
 														quid "4EAC4019011A"
-														pos (1335,155))))
+														pos (1335,155)
+														max_width 69)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC402301B3" @198
 												quid "4EAC402301B4"
 												pos (367,95)
@@ -2774,7 +2799,8 @@
 													pos (367,185)
 													label (object ItemLabel
 														quid "4EAC402301B6"
-														pos (407,155))))
+														pos (407,155)
+														max_width 244)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC402301B8" @200
 												quid "4EAC402301B9"
 												pos (559,95)
@@ -2784,7 +2810,8 @@
 													pos (559,185)
 													label (object ItemLabel
 														quid "4EAC402301BB"
-														pos (599,155))))
+														pos (599,155)
+														max_width 244)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC46A7003E" @202
 												quid "4EAC46A7003F"
 												pos (95,879)
@@ -2794,7 +2821,8 @@
 													pos (185,879)
 													label (object ItemLabel
 														quid "4EAC46A70041"
-														pos (155,919))))
+														pos (155,919)
+														max_width 209)))
 											(object JuncPtVw ":TOP:Conectado:J4EAC46A70043" @204
 												quid "4EAC46A70044"
 												pos (95,575)
@@ -2804,7 +2832,8 @@
 													pos (185,575)
 													label (object ItemLabel
 														quid "4EAC46A70046"
-														pos (155,615))))))
+														pos (155,615)
+														max_width 209)))))
 									(object StateView "StartState" "Initial" @206
 										quid "4EAC2FB503AC"
 										pos (180,180)
@@ -3038,16 +3067,18 @@
 							quidu "4EAC3DA20231"
 							label (object SegLabel @232
 								quid "4EAC3DA20240"
-								pos (911,1271)
+								pos (911,1272)
+								positionBySuperclass FALSE
 								max_width 278
-								pctDist 0.500000
+								pctDist 0.501127
 								height 45)
+							positionBySuperclass FALSE
 							client @176
 							supplier @177
 							vertices (list Points
 								(1055,1159)
-								(1055,1226)
-								(767,1226)
+								(1056,1225)
+								(769,1228)
 								(767,1159))
 							line_style 6144))
 					filterFlags 1)
