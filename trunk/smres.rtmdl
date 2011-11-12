@@ -4286,6 +4286,10 @@
 					(object ClassAttribute "console_timeout"
 						quid "4EBDBBCF03B9"
 						initv "5, 0"
+						type "RTTimespec")
+					(object ClassAttribute "long_console_timeout"
+						quid "4EBDC6680261"
+						initv "30, 0"
 						type "RTTimespec"))
 				statemachine (object State_Machine
 					quid "4EAC9F9702E8"
@@ -4373,7 +4377,7 @@
 									quid "4EBDBC63034B"
 									body 
 |
-|console_timer.cancelTimer(console_timer_id);
+|// console_timer.cancelTimer(console_timer_id);
 |
 |char cheat;
 |cout << ".";
@@ -4421,9 +4425,11 @@
 |	} else {
 |		cout << "Opcao invalida!" << endl;
 |	}
+|	console_timer_id = console_timer.informOnce(console_timeout);
+|}else{
+|    console_timer_id = console_timer.informOnce(long_console_timeout);
 |}
-|cout << ",";
-|console_timer_id = console_timer.informEvery(console_timeout);
+|
 									)
 								eventGuards (list eventGuardsList
 									(object EventGuard
@@ -4917,29 +4923,29 @@
 						IncludeOperation TRUE
 						showAggregations TRUE
 						quid "4EACBDA50151"
-						pos (2231,834)
+						pos (2234,836)
 						label (object ItemLabel
 							quid "4EACBDA50152"
-							pos (1945,660)
-							max_width 572
+							pos (1897,643)
+							max_width 674
 							label "Console")
 						stereotype (object ItemLabel
 							quid "4EACBDA50153"
-							pos (1945,623)
+							pos (1897,606)
 							anchor 10
-							max_width 572
+							max_width 674
 							label "<<Capsule>>")
 						icon_style "Decoration"
 						quidu "4EAC9F9702E7"
 						compartment (object Compartment
 							quid "4EACBDA50154"
-							pos (1945,718)
+							pos (1897,701)
 							anchor 2
-							nlines 11
-							max_width 569
+							nlines 12
+							max_width 671
 							justify 1)
-						width 590
-						height 579
+						width 692
+						height 616
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
@@ -4949,25 +4955,25 @@
 						quidu "4EAC9FBD0047"
 						label (object SegLabel @388
 							quid "4EACBDA50171"
-							pos (1878,871)
+							pos (1878,872)
 							max_width 150
 							label "console"
-							pctDist 0.242385
+							pctDist 0.045043
 							height 41)
 						client @386
 						supplier @380
 						vertices (list Points
-							(1935,831)
+							(1887,831)
 							(1702,828))
 						line_style 6144
 						label (object SegLabel @389
 							quid "4EACBDA50172"
-							pos (1931,884)
+							pos (1931,885)
 							hidden TRUE
 							anchor 1
 							max_width 15
 							label ""
-							pctDist 0.014236
+							pctDist -0.242507
 							height 53))
 					(object UsesView "" @390
 						quid "4EACBDB401AF"
@@ -4977,8 +4983,8 @@
 						client @386
 						supplier @384
 						vertices (list Points
-							(2201,544)
-							(2181,334))
+							(2201,527)
+							(2180,334))
 						line_style 6144)))))
 	root_subsystem (object SubSystem "Component View"
 		quid "4E9A9C14001D"
