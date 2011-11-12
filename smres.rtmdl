@@ -4322,7 +4322,7 @@
 								action (object Action
 									quid "4EACC05401BE"
 									body 
-|console_timer_id = console_timer.informEvery(console_timeout);
+|console_timer_id = console_timer.informIn(console_timeout);
 |
 |while(false && true) {
 |	char op;
@@ -4425,9 +4425,11 @@
 |	} else {
 |		cout << "Opcao invalida!" << endl;
 |	}
-|	console_timer_id = console_timer.informOnce(console_timeout);
+|}
+|if(cheat == ','){
+|console_timer_id = console_timer.informIn(long_console_timeout);
 |}else{
-|    console_timer_id = console_timer.informOnce(long_console_timeout);
+|console_timer_id = console_timer.informIn(console_timeout);
 |}
 |
 									)
@@ -4939,7 +4941,7 @@
 						quidu "4EAC9F9702E7"
 						compartment (object Compartment
 							quid "4EACBDA50154"
-							pos (1897,701)
+							pos (1897,705)
 							anchor 2
 							nlines 12
 							max_width 671
