@@ -770,6 +770,11 @@
 						name "ImplementationPreface"
 						value (value Text "")))
 				quid "4E9A9F600171"
+				used_nodes (list uses_relationship_list
+					(object Uses_Relationship
+						quid "4EBDF56101C5"
+						supplier  "Logical View::Global"
+						quidu "4E9BA92F0273"))
 				structure (object CapsuleCollaboration "Structure"
 					quid "4E9A9F600175"
 					ports (list portsList
@@ -1037,50 +1042,53 @@
 |FILE *pa2;
 |char *nome2 = "PontenciaConsumida.txt";
 |
-|pa2 = fopen(nome2, "a+");
+|if (Global::tempoBateria > 2)
+|{
+|	pa2 = fopen(nome2, "a+");
 |
-|itoa(consumoTotal, consumoTotalStr, 10);
+|	itoa(consumoTotal, consumoTotalStr, 10);
 |
-|fprintf(pa2, "%d\n",this->data);
+|	fprintf(pa2, "%d\n",this->data);
 |
-|fprintf(pa2, "Consumo total: ");
-|fputs(consumoTotalStr, pa2);
-|fprintf(pa2, "\n");
+|	fprintf(pa2, "Consumo total: ");
+|	fputs(consumoTotalStr, pa2);
+|	fprintf(pa2, "\n");
 |
-|(this->data)++;
+|	(this->data)++;
 |
-|fclose(pa2);
+|	fclose(pa2);
 |
-|// Sanitize file
-|int i;
+|	// Sanitize file
+|	int i;
 |
-|if ((data%7)==0) {
-|	char *filename = "PontenciaConsumida.txt";
-|	FILE *file = fopen(filename, "r");
-|	int lines = 0;
-|	char line [512];
-|	while (fgets(line, sizeof line, file) != NULL) {
-|		lines++;
-|	}
-|	fclose(file);
-|	if (lines > 120) { // passou de 2 meses
-|		file = fopen(filename, "r");
-|		int dif = lines - 120;
-|		for (i=0; i<dif; i++) { // descarta linhas
-|			fgets(line, sizeof line, file);
-|		}
-|		char cache[512][512];
-|		for (i=0; i<120; i++) {
-|			fgets(line, sizeof line, file);
-|			strcpy(cache[i], line);
+|	if ((data%7)==0) {
+|		char *filename = "PontenciaConsumida.txt";
+|		FILE *file = fopen(filename, "r");
+|		int lines = 0;
+|		char line [512];
+|		while (fgets(line, sizeof line, file) != NULL) {
+|			lines++;
 |		}
 |		fclose(file);
-|		// salva apenas atual
-|		file = fopen(filename, "w");
-|		for (i=0; i<120; i++) {
-|			fputs(cache[i], file);
+|		if (lines > 120) { // passou de 2 meses
+|			file = fopen(filename, "r");
+|			int dif = lines - 120;
+|			for (i=0; i<dif; i++) { // descarta linhas
+|				fgets(line, sizeof line, file);
+|			}
+|			char cache[512][512];
+|			for (i=0; i<120; i++) {
+|				fgets(line, sizeof line, file);
+|				strcpy(cache[i], line);
+|			}
+|			fclose(file);
+|			// salva apenas atual
+|			file = fopen(filename, "w");
+|			for (i=0; i<120; i++) {
+|				fputs(cache[i], file);
+|			}
+|			fclose(file);
 |		}
-|		fclose(file);
 |	}
 |}
 |
@@ -4761,11 +4769,14 @@
 						body 
 |time_t rawtime = time (NULL);
 |
-|FILE *fLogBateria = fopen(log_bateria_filename, "a");
+|if (Global::tempoBateria > 2)
+|{
+|	FILE *fLogBateria = fopen(log_bateria_filename, "a");
 |
-|fprintf (fLogBateria, "%s em %s", message, ctime (&rawtime) );
+|	fprintf (fLogBateria, "%s em %s", message, ctime (&rawtime) );
 |
-|fclose(fLogBateria);
+|	fclose(fLogBateria);
+|}
 |
 						
 						parameters (list Parameters
@@ -5638,7 +5649,7 @@
 						quidu "4E9BA92F0273"
 						compartment (object Compartment
 							quid "4EAB8F7A0050"
-							pos (1945,100)
+							pos (1945,104)
 							anchor 2
 							nlines 7
 							max_width 441
@@ -5680,7 +5691,7 @@
 						quidu "4EAC9F9702E7"
 						compartment (object Compartment
 							quid "4EACBDA50154"
-							pos (1897,686)
+							pos (1897,690)
 							anchor 2
 							nlines 13
 							max_width 672
