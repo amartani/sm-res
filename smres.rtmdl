@@ -4630,6 +4630,7 @@
 						name "HeaderPreface"
 						value (value Text 
 |#include <iostream>
+|#include <ctime>
 |
 |using namespace std;
 						)))
@@ -4669,7 +4670,47 @@
 					(object ClassAttribute "check_timeout"
 						quid "4EBDE412029F"
 						initv "1,0"
-						type "RTTimespec"))
+						type "RTTimespec")
+					(object ClassAttribute "log_bateria_filename"
+						quid "4EBDEB16037A"
+						initv 
+|"log_bateria.txt"
+						
+						type "char[]"
+						scope "Classifier"
+						visibility "Public"
+						changeable "Frozen"))
+				operations (list Operations
+					(object Operation "logar"
+						quid "4EBDEC0D036B"
+						body 
+|time_t rawtime = time (NULL);
+|
+|FILE *fLogBateria = fopen(log_bateria_filename, "a");
+|
+|fprintf (fLogBateria, "%s em %s", message, ctime (&rawtime) );
+|
+|fclose(fLogBateria);
+|
+						
+						parameters (list Parameters
+							(object Parameter "message"
+								quid "4EBDEC3502EE"
+								type "char*"))
+						result "void"
+						scope "Classifier")
+					(object Operation "imprimir_log"
+						quid "4EBDEC9B034B"
+						body 
+|FILE *fp = fopen(log_bateria_filename, "r");
+|char c;
+|
+|while ((c=getc(fp)) != EOF) putchar(c);
+|
+|fclose(fp);
+						
+						result "void"
+						scope "Classifier"))
 				statemachine (object State_Machine
 					quid "4EBDD0F9004F"
 					State (object State "TOP"
@@ -4759,7 +4800,12 @@
 								target  ":TOP:Verificar:J4EBDD3950372"
 								action (object Action
 									quid "4EBDD4190399"
-									body "temEnergia = true;")
+									body 
+|temEnergia = true;
+|
+|logar("Energia voltou, bateria carregando");
+|
+									)
 								eventGuards (list eventGuardsList
 									(object EventGuard
 										quid "4EBDD3FD0148"
@@ -4777,7 +4823,12 @@
 								target  ":TOP:Verificar:J4EBDE2C10304"
 								action (object Action
 									quid "4EBDE2D100CB"
-									body "temEnergia = false;")
+									body 
+|temEnergia = false;
+|
+|logar("Energia caiu, bateria descarregando");
+|
+									)
 								eventGuards (list eventGuardsList
 									(object EventGuard
 										quid "4EBDE2DA004E"
@@ -4954,31 +5005,11 @@
 								(204,195)
 								(312,265))
 							line_style 6144)
-						(object TransView ":TOP:Verificar:J4EBDD3AC0000:alteraTemEnergia" @397
-							quid "4EBDD395036B"
-							uses_fill_color FALSE
-							quidu "4EBDD395036C"
-							label (object SegLabel @398
-								quid "4EBDD3950377"
-								pos (673,334)
-								positionBySuperclass FALSE
-								max_width 259
-								pctDist 0.607477
-								height 39)
-							positionBySuperclass FALSE
-							client @376
-							supplier @375
-							vertices (list Points
-								(567,271)
-								(634,271)
-								(634,351)
-								(567,351))
-							line_style 6144)
-						(object TransView ":TOP:Verificar:J4EBDD1A4038C:Incrementar" @399
+						(object TransView ":TOP:Verificar:J4EBDD1A4038C:Incrementar" @397
 							quid "4EBDD1A4038A"
 							uses_fill_color FALSE
 							quidu "4EBDD1A4038B"
-							label (object SegLabel @400
+							label (object SegLabel @398
 								quid "4EBDD1A4039F"
 								pos (427,527)
 								positionBySuperclass FALSE
@@ -4994,11 +5025,11 @@
 								(409,484)
 								(370,411))
 							line_style 6144)
-						(object TransView ":TOP:Verificar:J4EBDE2C102FF:alteraNaoTemEnergia" @401
+						(object TransView ":TOP:Verificar:J4EBDE2C102FF:alteraNaoTemEnergia" @399
 							quid "4EBDE2C102FD"
 							uses_fill_color FALSE
 							quidu "4EBDE2C102FE"
-							label (object SegLabel @402
+							label (object SegLabel @400
 								quid "4EBDE2C10309"
 								pos (642,451)
 								positionBySuperclass FALSE
@@ -5013,6 +5044,26 @@
 								(564,385)
 								(622,419)
 								(537,404))
+							line_style 6144)
+						(object TransView ":TOP:Verificar:J4EBDD3AC0000:alteraTemEnergia" @401
+							quid "4EBDD395036B"
+							uses_fill_color FALSE
+							quidu "4EBDD395036C"
+							label (object SegLabel @402
+								quid "4EBDD3950377"
+								pos (673,334)
+								positionBySuperclass FALSE
+								max_width 259
+								pctDist 0.608491
+								height 39)
+							positionBySuperclass FALSE
+							client @376
+							supplier @375
+							vertices (list Points
+								(567,271)
+								(634,272)
+								(634,350)
+								(567,350))
 							line_style 6144))
 					filterFlags 1)
 				language "C++"
