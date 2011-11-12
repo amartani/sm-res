@@ -161,6 +161,12 @@
 						initv "7220"
 						type "int"
 						scope "Classifier"
+						visibility "Public")
+					(object ClassAttribute "tempoBateria"
+						quid "4EBDD68D02DE"
+						initv "180"
+						type "int"
+						scope "Classifier"
 						visibility "Public"))
 				language "C++")
 			(object Class "Message"
@@ -4251,6 +4257,12 @@
 						quidu "4E9BA92F0273"))
 				structure (object CapsuleCollaboration "Structure"
 					quid "4EAC9F9702EB"
+					classifierRoles (list classifierRolesList
+						(object CapsuleRole "bateria"
+							quid "4EBDD43A002E"
+							classifier  "Logical View::Bateria"
+							quidu "4EBDD0F9004E"
+							genericity "fixed"))
 					ports (list portsList
 						(object Port "console_timer"
 							quid "4EBDBBF30177"
@@ -4399,7 +4411,7 @@
 |	
 |	if (op=='b') {
 |		// Informar quantidade de bateria restante
-|		cout << "Total de bateria restante (h): " << bateriaRestante << endl;
+|		cout << "Total de bateria restante (h): " << (Global::tempoBateria) << endl;
 |	} else if (op=='m') {
 |		// Data da proxima revisao do aparelho
 |		cout << "Data da proxima revisao: " << diaRevisao << "/" << mesRevisao << "/" << anoRevisao << endl;
@@ -4476,11 +4488,13 @@
 									quid "4EBDBBA5012E"
 									pos (767,660)
 									quidu "4EBDBBA5012A"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012F" @352
 									quid "4EBDBBA5013B"
 									pos (687,660)
 									quidu "4EBDBBA5012F"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE))
 							statediagram (object State_Diagram ""
 								quid "4EACA2E60153"
@@ -4550,16 +4564,17 @@
 							quidu "4EBDBBA50129"
 							label (object SegLabel @364
 								quid "4EBDBBA5013C"
-								pos (727,780)
+								pos (701,767)
+								positionBySuperclass FALSE
 								max_width 197
-								pctDist 0.500000
-								height 45)
+								pctDist 1.134842
+								height 33)
+							positionBySuperclass FALSE
 							client @351
 							supplier @352
 							vertices (list Points
-								(767,668)
-								(767,735)
-								(687,735)
+								(760,665)
+								(688,734)
 								(687,668))
 							line_style 6144))
 					filterFlags 1)
@@ -4571,7 +4586,31 @@
 							quid "4EAC9F9702F2"
 							pos (840,615)
 							quidu "4EAC9F9702EB")
-						(object PortVw ":Structure:console_timer" @366
+						(object CapsuleRoleVw ":Structure:bateria" @366
+							quid "4EBDD43901C5"
+							pos (488,490)
+							quidu "4EBDD43A002E"
+							label (object ItemLabel
+								quid "4EBDD43A0032"
+								pos (488,449)
+								positionBySuperclass FALSE
+								nlines 2
+								max_width 134
+								label "bateria")
+							positionBySuperclass FALSE
+							boundIcons (list boundIconsList
+								(object ConnectionPtVw ":Structure:bateria:portMudancaEnergia" @367
+									quid "4EBDD43A0030"
+									pos (368,512)
+									label (object ItemLabel
+										quid "4EBDD43A0031"
+										pos (347,533)
+										positionBySuperclass FALSE
+										nlines 2
+										max_width 363
+										label "portMudancaEnergia")
+									positionBySuperclass FALSE)))
+						(object PortVw ":Structure:console_timer" @368
 							quid "4EBDBBF500AB"
 							pos (820,580)
 							quidu "4EBDBBF30177"
@@ -4582,6 +4621,430 @@
 								nlines 2
 								max_width 259
 								label "console_timer")
+							positionBySuperclass FALSE))
+					filterFlags 521))
+			(object Capsule "Bateria"
+				attributes (list Attribute_Set
+					(object Attribute
+						tool "OT::Cpp"
+						name "HeaderPreface"
+						value (value Text 
+|#include <iostream>
+|
+|using namespace std;
+						)))
+				quid "4EBDD0F9004E"
+				used_nodes (list uses_relationship_list
+					(object Uses_Relationship
+						quid "4EBDD8D600EA"
+						supplier  "Logical View::Global"
+						quidu "4E9BA92F0273"))
+				structure (object CapsuleCollaboration "Structure"
+					quid "4EBDD0F90052"
+					ports (list portsList
+						(object Port "TimeAtualizarValor"
+							quid "4EBDD2340251"
+							classifier  "Logical View::RTClasses::Timing"
+							quidu "37E9292C018C"
+							isRelay FALSE
+							isWired FALSE
+							visibility "Protected")
+						(object Port "portMudancaEnergia"
+							quid "4EBDD2860280"
+							classifier  "Logical View::MudancaEnergia"
+							quidu "4EBDD2500251"
+							isConjugated TRUE
+							isRelay FALSE)))
+				class_attributes (list class_attribute_list
+					(object ClassAttribute "MAX_TEMPO_RESTANTE"
+						quid "4EBDD1BF003E"
+						initv "180"
+						type "int"
+						scope "Classifier"
+						changeable "Frozen")
+					(object ClassAttribute "temEnergia"
+						quid "4EBDD1FB0203"
+						initv "true"
+						type "bool")
+					(object ClassAttribute "check_timeout"
+						quid "4EBDE412029F"
+						initv "1,0"
+						type "RTTimespec"))
+				statemachine (object State_Machine
+					quid "4EBDD0F9004F"
+					State (object State "TOP"
+						quid "4EBDD0F90050"
+						states (list States
+							(object InitialPt "Initial"
+								quid "4EBDD0F90051")
+							(object State "Verificar"
+								quid "4EBDD18F002E"
+								states (list States
+									(object InitialPt "Initial"
+										quid "4EBDD18F0030")
+									(object JuncPt "J4EBDD195037B"
+										quid "4EBDD195037B"
+										isEntry TRUE
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDD1A4038C"
+										quid "4EBDD1A4038C"
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDD1A4039A"
+										quid "4EBDD1A4039A"
+										isEntry TRUE
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDD3950372"
+										quid "4EBDD3950372"
+										isEntry TRUE
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDD3AC0000"
+										quid "4EBDD3AC0000"
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDE2C102FF"
+										quid "4EBDE2C102FF"
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDE2C10304"
+										quid "4EBDE2C10304"
+										isEntry TRUE
+										externallyVisible TRUE))))
+						transitions (list transition_list
+							(object Trans "Initial"
+								quid "4EBDD195037A"
+								source  ":TOP:Initial"
+								target  ":TOP:Verificar:J4EBDD195037B"
+								action (object Action
+									quid "4EBDE376002E"
+									body "TimeAtualizarValor.informEvery(check_timeout);"))
+							(object Trans "Incrementar"
+								quid "4EBDD1A4038B"
+								source  ":TOP:Verificar:J4EBDD1A4038C"
+								target  ":TOP:Verificar:J4EBDD1A4039A"
+								action (object Action
+									quid "4EBDD363038A"
+									body 
+|int tempoRestante = (Global::tempoBateria);
+|
+|if (temEnergia)
+|{
+|	tempoRestante += 1;
+|	if (tempoRestante > MAX_TEMPO_RESTANTE) tempoRestante = MAX_TEMPO_RESTANTE;
+|}
+|else
+|{
+|	tempoRestante -= 1;
+|	if (tempoRestante < 0) tempoRestante = 0;
+|}
+|
+|if (tempoRestante != (Global::tempoBateria))
+|{
+|	cout << "Tempo de bateria restante (h): " << tempoRestante << endl;
+|	(Global::tempoBateria) = tempoRestante;
+|}
+|
+									)
+								eventGuards (list eventGuardsList
+									(object EventGuard
+										quid "4EBDD2A2008C"
+										Event (object PortEvent
+											quid "4EBDD2A2008D"
+											ports (list portsList
+												ports  ":Structure:TimeAtualizarValor"
+												quidu "4EBDD2340251")
+											signals (list signalsList
+												signals  ":base:timeout"
+												quidu "3DF743000081")))))
+							(object Trans "alteraTemEnergia"
+								quid "4EBDD395036C"
+								source  ":TOP:Verificar:J4EBDD3AC0000"
+								target  ":TOP:Verificar:J4EBDD3950372"
+								action (object Action
+									quid "4EBDD4190399"
+									body "temEnergia = true;")
+								eventGuards (list eventGuardsList
+									(object EventGuard
+										quid "4EBDD3FD0148"
+										Event (object PortEvent
+											quid "4EBDD3FD0149"
+											ports (list portsList
+												ports  ":Structure:portMudancaEnergia"
+												quidu "4EBDD2860280")
+											signals (list signalsList
+												signals  ":base:temEnergia"
+												quidu "4EBDD26C0177")))))
+							(object Trans "alteraNaoTemEnergia"
+								quid "4EBDE2C102FE"
+								source  ":TOP:Verificar:J4EBDE2C102FF"
+								target  ":TOP:Verificar:J4EBDE2C10304"
+								action (object Action
+									quid "4EBDE2D100CB"
+									body "temEnergia = false;")
+								eventGuards (list eventGuardsList
+									(object EventGuard
+										quid "4EBDE2DA004E"
+										Event (object PortEvent
+											quid "4EBDE2DA004F"
+											ports (list portsList
+												ports  ":Structure:portMudancaEnergia"
+												quidu "4EBDD2860280")
+											signals (list signalsList
+												signals  ":base:naoTemEnergia"
+												quidu "4EBDE29D029F"))))))))
+				statediagram (object State_Diagram "State Diagram"
+					quid "4EBDD0F90053"
+					items (list diagram_item_list
+						(object StateView "Perimeter" "TOP" @369
+							quid "4EBDD0F90055"
+							pos (840,615)
+							quidu "4EBDD0F90050")
+						(object StateView "StartState" "Initial" @370
+							quid "4EBDD0F90056"
+							pos (180,180)
+							quidu "4EBDD0F90051")
+						(object StateView "Normal" "Verificar" @371
+							quid "4EBDD18F001F"
+							pos (440,314)
+							quidu "4EBDD18F002E"
+							label (object ItemLabel
+								quid "4EBDD18F002F"
+								pos (440,269)
+								max_width 119)
+							boundIcons (list boundIconsList
+								(object JuncPtVw ":TOP:Verificar:J4EBDD195037B" @372
+									quid "4EBDD1950383"
+									pos (320,271)
+									quidu "4EBDD195037B"
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDD1A4038C" @373
+									quid "4EBDD1A40399"
+									pos (463,404)
+									quidu "4EBDD1A4038C"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDD1A4039A" @374
+									quid "4EBDD1A4039E"
+									pos (367,404)
+									quidu "4EBDD1A4039A"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDD3950372" @375
+									quid "4EBDD3950376"
+									pos (559,351)
+									quidu "4EBDD3950372"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDD3AC0000" @376
+									quid "4EBDD3AC0004"
+									pos (559,271)
+									quidu "4EBDD3AC0000"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDE2C102FF" @377
+									quid "4EBDE2C10303"
+									pos (557,382)
+									quidu "4EBDE2C102FF"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Verificar:J4EBDE2C10304" @378
+									quid "4EBDE2C10308"
+									pos (530,403)
+									quidu "4EBDE2C10304"
+									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE))
+							statediagram (object State_Diagram ""
+								quid "4EBDD195037C"
+								items (list diagram_item_list
+									(object StateView "Perimeter" "Verificar" @379
+										quid "4EBDD195037E"
+										pos (840,615)
+										quidu "4EBDD18F002E"
+										boundIcons (list boundIconsList
+											(object JuncPtVw ":TOP:Verificar:J4EBDD195037B" @380
+												quid "4EBDD1950380"
+												pos (95,367)
+												quidu "4EBDD195037B"
+												juncPtIcon (object JuncPtIcon @381
+													quid "4EBDD1950381"
+													pos (185,367)
+													label (object ItemLabel
+														quid "4EBDD1950382"
+														pos (155,407)
+														max_width 75)))
+											(object JuncPtVw ":TOP:Verificar:J4EBDD1A4038C" @382
+												quid "4EBDD1A4038D"
+												pos (991,1135)
+												quidu "4EBDD1A4038C"
+												juncPtIcon (object JuncPtIcon @383
+													quid "4EBDD1A4038E"
+													pos (991,1045)
+													label (object ItemLabel
+														quid "4EBDD1A4038F"
+														pos (1031,1075)
+														max_width 175)))
+											(object JuncPtVw ":TOP:Verificar:J4EBDD1A4039A" @384
+												quid "4EBDD1A4039B"
+												pos (383,1135)
+												quidu "4EBDD1A4039A"
+												juncPtIcon (object JuncPtIcon @385
+													quid "4EBDD1A4039C"
+													pos (383,1045)
+													label (object ItemLabel
+														quid "4EBDD1A4039D"
+														pos (423,1075)
+														max_width 175)))
+											(object JuncPtVw ":TOP:Verificar:J4EBDD3950372" @386
+												quid "4EBDD3950373"
+												pos (1183,1135)
+												quidu "4EBDD3950372"
+												juncPtIcon (object JuncPtIcon @387
+													quid "4EBDD3950374"
+													pos (1183,1045)
+													label (object ItemLabel
+														quid "4EBDD3950375"
+														pos (1223,1075)
+														max_width 259)))
+											(object JuncPtVw ":TOP:Verificar:J4EBDD3AC0000" @388
+												quid "4EBDD3AC0001"
+												pos (1583,367)
+												quidu "4EBDD3AC0000"
+												juncPtIcon (object JuncPtIcon @389
+													quid "4EBDD3AC0002"
+													pos (1493,367)
+													label (object ItemLabel
+														quid "4EBDD3AC0003"
+														pos (1523,407)
+														max_width 259)))
+											(object JuncPtVw ":TOP:Verificar:J4EBDE2C102FF" @390
+												quid "4EBDE2C10300"
+												pos (1583,1007)
+												quidu "4EBDE2C102FF"
+												juncPtIcon (object JuncPtIcon @391
+													quid "4EBDE2C10301"
+													pos (1493,1007)
+													label (object ItemLabel
+														quid "4EBDE2C10302"
+														pos (1523,1047))))
+											(object JuncPtVw ":TOP:Verificar:J4EBDE2C10304" @392
+												quid "4EBDE2C10305"
+												pos (1407,1135)
+												quidu "4EBDE2C10304"
+												juncPtIcon (object JuncPtIcon @393
+													quid "4EBDE2C10306"
+													pos (1407,1045)
+													label (object ItemLabel
+														quid "4EBDE2C10307"
+														pos (1447,1075))))))
+									(object StateView "StartState" "Initial" @394
+										quid "4EBDD195037F"
+										pos (180,180)
+										quidu "4EBDD18F0030"))
+								filterFlags 1))
+						(object TransView ":TOP:Initial:Initial" @395
+							quid "4EBDD1950138"
+							uses_fill_color FALSE
+							quidu "4EBDD195037A"
+							label (object SegLabel @396
+								quid "4EBDD1950384"
+								pos (283,193)
+								max_width 75
+								pctDist 0.506641
+								height 44)
+							client @370
+							supplier @372
+							vertices (list Points
+								(204,195)
+								(312,265))
+							line_style 6144)
+						(object TransView ":TOP:Verificar:J4EBDD3AC0000:alteraTemEnergia" @397
+							quid "4EBDD395036B"
+							uses_fill_color FALSE
+							quidu "4EBDD395036C"
+							label (object SegLabel @398
+								quid "4EBDD3950377"
+								pos (673,334)
+								positionBySuperclass FALSE
+								max_width 259
+								pctDist 0.607477
+								height 39)
+							positionBySuperclass FALSE
+							client @376
+							supplier @375
+							vertices (list Points
+								(567,271)
+								(634,271)
+								(634,351)
+								(567,351))
+							line_style 6144)
+						(object TransView ":TOP:Verificar:J4EBDD1A4038C:Incrementar" @399
+							quid "4EBDD1A4038A"
+							uses_fill_color FALSE
+							quidu "4EBDD1A4038B"
+							label (object SegLabel @400
+								quid "4EBDD1A4039F"
+								pos (427,527)
+								positionBySuperclass FALSE
+								max_width 175
+								pctDist 0.526793
+								height 44)
+							positionBySuperclass FALSE
+							client @373
+							supplier @374
+							vertices (list Points
+								(463,412)
+								(463,478)
+								(409,484)
+								(370,411))
+							line_style 6144)
+						(object TransView ":TOP:Verificar:J4EBDE2C102FF:alteraNaoTemEnergia" @401
+							quid "4EBDE2C102FD"
+							uses_fill_color FALSE
+							quidu "4EBDE2C102FE"
+							label (object SegLabel @402
+								quid "4EBDE2C10309"
+								pos (642,451)
+								positionBySuperclass FALSE
+								max_width 322
+								pctDist 1.497345
+								height 17
+								orientation 1)
+							positionBySuperclass FALSE
+							client @377
+							supplier @378
+							vertices (list Points
+								(564,385)
+								(622,419)
+								(537,404))
+							line_style 6144))
+					filterFlags 1)
+				language "C++"
+				structureDiagram (object CollaborationDiagram "Structure Diagram"
+					quid "4EBDD0F90057"
+					items (list diagram_item_list
+						(object CapsulePerimeterVw "Structure" @403
+							quid "4EBDD0F90059"
+							pos (840,615)
+							quidu "4EBDD0F90052"
+							boundIcons (list boundIconsList
+								(object PortVw ":Structure:portMudancaEnergia" @404
+									quid "4EBDD2860128"
+									pos (96,724)
+									quidu "4EBDD2860280"
+									label (object ItemLabel
+										quid "4EBDD2860281"
+										pos (105,760)
+										nlines 2
+										max_width 363
+										label "portMudancaEnergia"))))
+						(object PortVw ":Structure:TimeAtualizarValor" @405
+							quid "4EBDD23400DA"
+							pos (596,964)
+							quidu "4EBDD2340251"
+							label (object ItemLabel
+								quid "4EBDD2340253"
+								pos (605,1000)
+								positionBySuperclass FALSE
+								nlines 2
+								max_width 328
+								label "TimeAtualizarValor")
 							positionBySuperclass FALSE))
 					filterFlags 521))
 			(object Protocol "Ordem"
@@ -4606,11 +5069,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E9AA1630270"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @367
+						(object StateView "Perimeter" "TOP" @406
 							quid "4E9AA1630272"
 							pos (840,615)
 							quidu "4E9AA163026D")
-						(object StateView "StartState" "Initial" @368
+						(object StateView "StartState" "Initial" @407
 							quid "4E9AA1630273"
 							pos (180,180)
 							quidu "4E9AA163026E"))
@@ -4638,11 +5101,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E9B4AAE0327"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @369
+						(object StateView "Perimeter" "TOP" @408
 							quid "4E9B4AAE0329"
 							pos (840,615)
 							quidu "4E9B4AAE0324")
-						(object StateView "StartState" "Initial" @370
+						(object StateView "StartState" "Initial" @409
 							quid "4E9B4AAE032A"
 							pos (180,180)
 							quidu "4E9B4AAE0325"))
@@ -4674,11 +5137,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4EAB7CBF0034"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @371
+						(object StateView "Perimeter" "TOP" @410
 							quid "4EAB7CBF0036"
 							pos (840,615)
 							quidu "4EAB7CBF0031")
-						(object StateView "StartState" "Initial" @372
+						(object StateView "StartState" "Initial" @411
 							quid "4EAB7CBF0037"
 							pos (180,180)
 							quidu "4EAB7CBF0032"))
@@ -4712,14 +5175,49 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E872E630187"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @373
+						(object StateView "Perimeter" "TOP" @412
 							quid "4E872E630189"
 							pos (840,615)
 							quidu "4E872E630184")
-						(object StateView "StartState" "Initial" @374
+						(object StateView "StartState" "Initial" @413
 							quid "4E872E63018A"
 							pos (180,180)
 							quidu "4E872E630185"))
+					filterFlags 1)
+				language "C++")
+			(object Protocol "MudancaEnergia"
+				quid "4EBDD2500251"
+				statemachine (object State_Machine
+					quid "4EBDD2500261"
+					State (object State "TOP"
+						quid "4EBDD2500262"
+						states (list States
+							(object InitialPt "Initial"
+								quid "4EBDD2500263"))))
+				collaborations (list collaborationsList
+					(object Collaboration "Collaboration1"
+						quid "4EBDD2500264"))
+				protocolRoles (list protocolRolesList
+					(object ProtocolRole "base"
+						quid "4EBDD26C0178"
+						outSignals (list outSignalsList
+							(object Signal "temEnergia"
+								quid "4EBDD26C0177"
+								dataType  "void")
+							(object Signal "naoTemEnergia"
+								quid "4EBDE29D029F"
+								dataType  "void"))))
+				statediagram (object State_Diagram "State Diagram"
+					quid "4EBDD2500265"
+					items (list diagram_item_list
+						(object StateView "Perimeter" "TOP" @414
+							quid "4EBDD2500267"
+							pos (840,615)
+							quidu "4EBDD2500262")
+						(object StateView "StartState" "Initial" @415
+							quid "4EBDD2500268"
+							pos (180,180)
+							quidu "4EBDD2500263"))
 					filterFlags 1)
 				language "C++")
 			(object Class_Category "RTClasses"
@@ -4732,7 +5230,7 @@
 			(object ClassDiagram "Main"
 				quid "3619364703D4"
 				items (list diagram_item_list
-					(object ClassView "Class" "Logical View::RTClasses::RTTimespec" @375
+					(object ClassView "Class" "Logical View::RTClasses::RTTimespec" @416
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4750,7 +5248,7 @@
 						height 164
 						annotation 8
 						autoResize TRUE)
-					(object ClassView "Class" "Logical View::RTClasses::RTTimerId" @376
+					(object ClassView "Class" "Logical View::RTClasses::RTTimerId" @417
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4768,7 +5266,7 @@
 						height 164
 						annotation 8
 						autoResize TRUE)
-					(object CapsuleVw "PontoDeConsumo" @377
+					(object CapsuleVw "PontoDeConsumo" @418
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4800,29 +5298,29 @@
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object UsesView "" @378
+					(object UsesView "" @419
 						quid "4E9AA57502E8"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4E9AA5760029"
-						client @377
-						supplier @376
+						client @418
+						supplier @417
 						vertices (list Points
 							(354,479)
 							(357,212))
 						line_style 6144)
-					(object UsesView "" @379
+					(object UsesView "" @420
 						quid "4E9AA57C0355"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4E9AA57D024C"
-						client @377
-						supplier @375
+						client @418
+						supplier @416
 						vertices (list Points
 							(575,479)
 							(690,212))
 						line_style 6144)
-					(object CapsuleVw "SMRES" @380
+					(object CapsuleVw "SMRES" @421
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4854,11 +5352,11 @@
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object CapsuleRoleRelVw ":Structure:pontoDeConsumo" @381
+					(object CapsuleRoleRelVw ":Structure:pontoDeConsumo" @422
 						quid "4EAB8F6F001F"
 						uses_fill_color FALSE
 						quidu "4E9AC1B4019F"
-						label (object SegLabel @382
+						label (object SegLabel @423
 							quid "4EAB8F6F0020"
 							pos (776,874)
 							positionBySuperclass FALSE
@@ -4867,13 +5365,13 @@
 							pctDist 0.207804
 							height 57)
 						positionBySuperclass FALSE
-						client @377
-						supplier @380
+						client @418
+						supplier @421
 						vertices (list Points
 							(698,945)
 							(1119,874))
 						line_style 6144
-						label (object SegLabel @383
+						label (object SegLabel @424
 							quid "4EAB8F6F0021"
 							pos (795,959)
 							positionBySuperclass FALSE
@@ -4883,43 +5381,43 @@
 							pctDist 0.218579
 							height 30
 							orientation 1))
-					(object ClassView "Class" "Logical View::Global" @384
+					(object ClassView "Class" "Logical View::Global" @425
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
 						showAggregations TRUE
 						quid "4EAB8F7A004E"
-						pos (2166,183)
+						pos (2165,195)
 						label (object ItemLabel
 							quid "4EAB8F7A004F"
-							pos (1929,41)
-							max_width 474
+							pos (1945,42)
+							max_width 440
 							label "Global")
 						icon_style "Decoration"
 						quidu "4E9BA92F0273"
 						compartment (object Compartment
 							quid "4EAB8F7A0050"
-							pos (1929,103)
+							pos (1945,100)
 							anchor 2
-							nlines 6
-							max_width 481
+							nlines 7
+							max_width 441
 							justify 1)
-						width 492
-						height 302
+						width 458
+						height 325
 						annotation 8
 						autoResize TRUE)
-					(object UsesView "" @385
+					(object UsesView "" @426
 						quid "4EAB8F7E0138"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4EAB8F7E02AF"
-						client @380
-						supplier @384
+						client @421
+						supplier @425
 						vertices (list Points
-							(1702,575)
-							(1986,334))
+							(1702,580)
+							(1968,357))
 						line_style 6144)
-					(object CapsuleVw "Console" @386
+					(object CapsuleVw "Console" @427
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4941,7 +5439,7 @@
 						quidu "4EAC9F9702E7"
 						compartment (object Compartment
 							quid "4EACBDA50154"
-							pos (1897,705)
+							pos (1897,701)
 							anchor 2
 							nlines 12
 							max_width 671
@@ -4951,24 +5449,24 @@
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object CapsuleRoleRelVw ":Structure:console" @387
+					(object CapsuleRoleRelVw ":Structure:console" @428
 						quid "4EACBDA50170"
 						uses_fill_color FALSE
 						quidu "4EAC9FBD0047"
-						label (object SegLabel @388
+						label (object SegLabel @429
 							quid "4EACBDA50171"
 							pos (1878,872)
 							max_width 150
 							label "console"
 							pctDist 0.045043
 							height 41)
-						client @386
-						supplier @380
+						client @427
+						supplier @421
 						vertices (list Points
 							(1887,831)
 							(1702,828))
 						line_style 6144
-						label (object SegLabel @389
+						label (object SegLabel @430
 							quid "4EACBDA50172"
 							pos (1931,885)
 							hidden TRUE
@@ -4977,16 +5475,16 @@
 							label ""
 							pctDist -0.242507
 							height 53))
-					(object UsesView "" @390
+					(object UsesView "" @431
 						quid "4EACBDB401AF"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4EACBDB40364"
-						client @386
-						supplier @384
+						client @427
+						supplier @425
 						vertices (list Points
-							(2201,527)
-							(2180,334))
+							(2200,527)
+							(2182,357))
 						line_style 6144)))))
 	root_subsystem (object SubSystem "Component View"
 		quid "4E9A9C14001D"
@@ -5049,7 +5547,11 @@
 					componentClassReferences  "Logical View::Message"
 					quidu "4E872E7301D0"
 					componentClassReferences  "Logical View::Console"
-					quidu "4EAC9F9702E7")
+					quidu "4EAC9F9702E7"
+					componentClassReferences  "Logical View::Bateria"
+					quidu "4EBDD0F9004E"
+					componentClassReferences  "Logical View::MudancaEnergia"
+					quidu "4EBDD2500251")
 				componentType "C++ Executable"
 				componentEnvironment "C++ TargetRTS")
 			(object SubSystem "RTComponents"
