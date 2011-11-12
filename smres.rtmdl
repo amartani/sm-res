@@ -889,12 +889,12 @@
 |char *nomeUser = "usuarios.txt";
 |
 |
-|printf("Quantos usuarios voce deseja cadastrar? ");
-|cin >> numeroDeUsuarios;
-|printf("\n");
-|
-|if ((pa = fopen(nomeUser, "r")) != NULL)
+|if ((pa = fopen(nomeUser, "r")) == NULL)
 |{
+|    printf("Quantos usuarios voce deseja cadastrar? ");
+|    cin >> numeroDeUsuarios;
+|    printf("\n");
+|
 |	pa = fopen(nomeUser, "w+");
 |
 |	for(int j = 0; j < numeroDeUsuarios ;j++)
@@ -4250,7 +4250,15 @@
 						supplier  "Logical View::Global"
 						quidu "4E9BA92F0273"))
 				structure (object CapsuleCollaboration "Structure"
-					quid "4EAC9F9702EB")
+					quid "4EAC9F9702EB"
+					ports (list portsList
+						(object Port "console_timer"
+							quid "4EBDBBF30177"
+							classifier  "Logical View::RTClasses::Timing"
+							quidu "37E9292C018C"
+							isRelay FALSE
+							isWired FALSE
+							visibility "Protected")))
 				class_attributes (list class_attribute_list
 					(object ClassAttribute "limiarConsumo"
 						quid "4EACA3320374"
@@ -4271,7 +4279,14 @@
 					(object ClassAttribute "anoRevisao"
 						quid "4EACA74B0122"
 						initv "2012"
-						type "int"))
+						type "int")
+					(object ClassAttribute "console_timer_id"
+						quid "4EBDBBB801E4"
+						type "RTTimerId")
+					(object ClassAttribute "console_timeout"
+						quid "4EBDBBCF03B9"
+						initv "5, 0"
+						type "RTTimespec"))
 				statemachine (object State_Machine
 					quid "4EAC9F9702E8"
 					State (object State "TOP"
@@ -4287,6 +4302,13 @@
 									(object JuncPt "J4EACA2E60152"
 										quid "4EACA2E60152"
 										isEntry TRUE
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDBBA5012A"
+										quid "4EBDBBA5012A"
+										externallyVisible TRUE)
+									(object JuncPt "J4EBDBBA5012F"
+										quid "4EBDBBA5012F"
+										isEntry TRUE
 										externallyVisible TRUE))))
 						transitions (list transition_list
 							(object Trans "Initial"
@@ -4296,7 +4318,9 @@
 								action (object Action
 									quid "4EACC05401BE"
 									body 
-|while(true) {
+|console_timer_id = console_timer.informEvery(console_timeout);
+|
+|while(false && true) {
 |	char op;
 |
 |	cout << endl << "====== Menu de opcoes ======" << endl;
@@ -4340,7 +4364,77 @@
 |	}
 |}
 |
-									)))))
+									))
+							(object Trans "console_loop"
+								quid "4EBDBBA50129"
+								source  ":TOP:Inicio:J4EBDBBA5012A"
+								target  ":TOP:Inicio:J4EBDBBA5012F"
+								action (object Action
+									quid "4EBDBC63034B"
+									body 
+|
+|console_timer.cancelTimer(console_timer_id);
+|
+|char cheat;
+|cout << ".";
+|cin >> cheat;
+|
+|if(cheat == '.'){
+|    char op;
+|
+|	cout << endl << "====== Menu de opcoes ======" << endl;
+|	cout << "b - Informar quantidade de bateria restante" << endl;
+|	cout << "m - Data da proxima revisao do aparelho" << endl;
+|	cout << "c - Definir limiar de consumo mensal" << endl;
+|	cout << "a - Mostra consumo do mes por tipo de aparelho" << endl;
+|	cout << "e - Sugestoes de economia de energia" << endl;
+|	cout << endl;
+|	cout << "opcao [b/m/c/a/e]: ";
+|	cin >> op;
+|	cout << endl;
+|	
+|	if (op=='b') {
+|		// Informar quantidade de bateria restante
+|		cout << "Total de bateria restante (h): " << bateriaRestante << endl;
+|	} else if (op=='m') {
+|		// Data da proxima revisao do aparelho
+|		cout << "Data da proxima revisao: " << diaRevisao << "/" << mesRevisao << "/" << anoRevisao << endl;
+|	} else if (op=='c') {
+|		// Definir limiar de consumo mensal
+|		cout << "Insira limiar de consumo mensal: ";
+|		cin >> limiarConsumo;
+|		cout << "Novo limiar definido (" << limiarConsumo << ")." << endl;
+|	} else if (op=='a') {
+|		// Mostra consumo do mes por tipo de aparelho
+|		cout << "Consumo Tipo 1: " << Global::consumoTipo1 << endl;
+|		cout << "Consumo Tipo 2: " << Global::consumoTipo2 << endl;
+|		cout << "Consumo Tipo 3: " << Global::consumoTipo3 << endl;
+|	} else if (op=='e') {
+|		// Sugestoes de economia de energia
+|		if ((Global::consumoTipo1 > Global::consumoTipo2) && (Global::consumoTipo1 > Global::consumoTipo3)) {
+|			cout << "Atente para o consumo de eletrodomesticos do tipo 1. Consumo total dessa classe: " << Global::consumoTipo1 << endl;
+|		} else if ((Global::consumoTipo2 > Global::consumoTipo1) && (Global::consumoTipo2 > Global::consumoTipo3)) {
+|			cout << "Atente para o consumo de eletrodomesticos do tipo 2. Consumo total dessa classe: " << Global::consumoTipo2 << endl;
+|		} else {
+|			cout << "Atente para o consumo de eletrodomesticos do tipo 3. Consumo total dessa classe: " << Global::consumoTipo3 << endl;
+|		}
+|	} else {
+|		cout << "Opcao invalida!" << endl;
+|	}
+|}
+|cout << ",";
+|console_timer_id = console_timer.informEvery(console_timeout);
+									)
+								eventGuards (list eventGuardsList
+									(object EventGuard
+										quid "4EBDBC3E0128"
+										Event (object PortEvent
+											quid "4EBDBC3E0129"
+											ports (list portsList
+												ports  ":Structure:console_timer"
+												quidu "4EBDBBF30177")
+											signals (list signalsList
+												signals  "*"))))))))
 				statediagram (object State_Diagram "State Diagram"
 					quid "4EAC9F9702EC"
 					items (list diagram_item_list
@@ -4369,36 +4463,66 @@
 									pos (635,491)
 									quidu "4EACA2E60152"
 									positionBySuperclass FALSE
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012A" @351
+									quid "4EBDBBA5012E"
+									pos (767,660)
+									quidu "4EBDBBA5012A"
+									boundIconAutoAdjust TRUE)
+								(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012F" @352
+									quid "4EBDBBA5013B"
+									pos (687,660)
+									quidu "4EBDBBA5012F"
 									boundIconAutoAdjust TRUE))
 							statediagram (object State_Diagram ""
 								quid "4EACA2E60153"
 								items (list diagram_item_list
-									(object StateView "Perimeter" "Inicio" @351
+									(object StateView "Perimeter" "Inicio" @353
 										quid "4EACA2E60155"
 										pos (840,615)
 										quidu "4EACA2E1019F"
 										boundIcons (list boundIconsList
-											(object JuncPtVw ":TOP:Inicio:J4EACA2E60152" @352
+											(object JuncPtVw ":TOP:Inicio:J4EACA2E60152" @354
 												quid "4EACA2E60157"
 												pos (162,103)
 												quidu "4EACA2E60152"
-												juncPtIcon (object JuncPtIcon @353
+												juncPtIcon (object JuncPtIcon @355
 													quid "4EACA2E60158"
 													pos (195,187)
 													label (object ItemLabel
 														quid "4EACA2E60159"
 														pos (235,157)
-														max_width 75)))))
-									(object StateView "StartState" "Initial" @354
+														max_width 75)))
+											(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012A" @356
+												quid "4EBDBBA5012B"
+												pos (991,1135)
+												quidu "4EBDBBA5012A"
+												juncPtIcon (object JuncPtIcon @357
+													quid "4EBDBBA5012C"
+													pos (991,1045)
+													label (object ItemLabel
+														quid "4EBDBBA5012D"
+														pos (1031,1075))))
+											(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012F" @358
+												quid "4EBDBBA50138"
+												pos (479,1135)
+												quidu "4EBDBBA5012F"
+												juncPtIcon (object JuncPtIcon @359
+													quid "4EBDBBA50139"
+													pos (479,1045)
+													label (object ItemLabel
+														quid "4EBDBBA5013A"
+														pos (519,1075))))))
+									(object StateView "StartState" "Initial" @360
 										quid "4EACA2E60156"
 										pos (180,180)
 										quidu "4EACA2E101B0"))
 								filterFlags 1))
-						(object TransView ":TOP:Initial:Initial" @355
+						(object TransView ":TOP:Initial:Initial" @361
 							quid "4EACA2E503C2"
 							uses_fill_color FALSE
 							quidu "4EACA2E60151"
-							label (object SegLabel @356
+							label (object SegLabel @362
 								quid "4EACA2E6015B"
 								pos (435,301)
 								positionBySuperclass FALSE
@@ -4411,16 +4535,46 @@
 							vertices (list Points
 								(203,195)
 								(626,485))
+							line_style 6144)
+						(object TransView ":TOP:Inicio:J4EBDBBA5012A:console_loop" @363
+							quid "4EBDBBA50128"
+							uses_fill_color FALSE
+							quidu "4EBDBBA50129"
+							label (object SegLabel @364
+								quid "4EBDBBA5013C"
+								pos (727,780)
+								max_width 197
+								pctDist 0.500000
+								height 45)
+							client @351
+							supplier @352
+							vertices (list Points
+								(767,668)
+								(767,735)
+								(687,735)
+								(687,668))
 							line_style 6144))
 					filterFlags 1)
 				language "C++"
 				structureDiagram (object CollaborationDiagram "Structure Diagram"
 					quid "4EAC9F9702F0"
 					items (list diagram_item_list
-						(object CapsulePerimeterVw "Structure" @357
+						(object CapsulePerimeterVw "Structure" @365
 							quid "4EAC9F9702F2"
 							pos (840,615)
-							quidu "4EAC9F9702EB"))
+							quidu "4EAC9F9702EB")
+						(object PortVw ":Structure:console_timer" @366
+							quid "4EBDBBF500AB"
+							pos (820,580)
+							quidu "4EBDBBF30177"
+							label (object ItemLabel
+								quid "4EBDBBF500AD"
+								pos (829,616)
+								positionBySuperclass FALSE
+								nlines 2
+								max_width 259
+								label "console_timer")
+							positionBySuperclass FALSE))
 					filterFlags 521))
 			(object Protocol "Ordem"
 				quid "4E9AA163026B"
@@ -4444,11 +4598,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E9AA1630270"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @358
+						(object StateView "Perimeter" "TOP" @367
 							quid "4E9AA1630272"
 							pos (840,615)
 							quidu "4E9AA163026D")
-						(object StateView "StartState" "Initial" @359
+						(object StateView "StartState" "Initial" @368
 							quid "4E9AA1630273"
 							pos (180,180)
 							quidu "4E9AA163026E"))
@@ -4476,11 +4630,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E9B4AAE0327"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @360
+						(object StateView "Perimeter" "TOP" @369
 							quid "4E9B4AAE0329"
 							pos (840,615)
 							quidu "4E9B4AAE0324")
-						(object StateView "StartState" "Initial" @361
+						(object StateView "StartState" "Initial" @370
 							quid "4E9B4AAE032A"
 							pos (180,180)
 							quidu "4E9B4AAE0325"))
@@ -4512,11 +4666,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4EAB7CBF0034"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @362
+						(object StateView "Perimeter" "TOP" @371
 							quid "4EAB7CBF0036"
 							pos (840,615)
 							quidu "4EAB7CBF0031")
-						(object StateView "StartState" "Initial" @363
+						(object StateView "StartState" "Initial" @372
 							quid "4EAB7CBF0037"
 							pos (180,180)
 							quidu "4EAB7CBF0032"))
@@ -4550,11 +4704,11 @@
 				statediagram (object State_Diagram "State Diagram"
 					quid "4E872E630187"
 					items (list diagram_item_list
-						(object StateView "Perimeter" "TOP" @364
+						(object StateView "Perimeter" "TOP" @373
 							quid "4E872E630189"
 							pos (840,615)
 							quidu "4E872E630184")
-						(object StateView "StartState" "Initial" @365
+						(object StateView "StartState" "Initial" @374
 							quid "4E872E63018A"
 							pos (180,180)
 							quidu "4E872E630185"))
@@ -4570,7 +4724,7 @@
 			(object ClassDiagram "Main"
 				quid "3619364703D4"
 				items (list diagram_item_list
-					(object ClassView "Class" "Logical View::RTClasses::RTTimespec" @366
+					(object ClassView "Class" "Logical View::RTClasses::RTTimespec" @375
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4588,7 +4742,7 @@
 						height 164
 						annotation 8
 						autoResize TRUE)
-					(object ClassView "Class" "Logical View::RTClasses::RTTimerId" @367
+					(object ClassView "Class" "Logical View::RTClasses::RTTimerId" @376
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4606,7 +4760,7 @@
 						height 164
 						annotation 8
 						autoResize TRUE)
-					(object CapsuleVw "PontoDeConsumo" @368
+					(object CapsuleVw "PontoDeConsumo" @377
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4638,29 +4792,29 @@
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object UsesView "" @369
+					(object UsesView "" @378
 						quid "4E9AA57502E8"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4E9AA5760029"
-						client @368
-						supplier @367
+						client @377
+						supplier @376
 						vertices (list Points
 							(354,479)
 							(357,212))
 						line_style 6144)
-					(object UsesView "" @370
+					(object UsesView "" @379
 						quid "4E9AA57C0355"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4E9AA57D024C"
-						client @368
-						supplier @366
+						client @377
+						supplier @375
 						vertices (list Points
 							(575,479)
 							(690,212))
 						line_style 6144)
-					(object CapsuleVw "SMRES" @371
+					(object CapsuleVw "SMRES" @380
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4692,11 +4846,11 @@
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object CapsuleRoleRelVw ":Structure:pontoDeConsumo" @372
+					(object CapsuleRoleRelVw ":Structure:pontoDeConsumo" @381
 						quid "4EAB8F6F001F"
 						uses_fill_color FALSE
 						quidu "4E9AC1B4019F"
-						label (object SegLabel @373
+						label (object SegLabel @382
 							quid "4EAB8F6F0020"
 							pos (776,874)
 							positionBySuperclass FALSE
@@ -4705,13 +4859,13 @@
 							pctDist 0.207804
 							height 57)
 						positionBySuperclass FALSE
-						client @368
-						supplier @371
+						client @377
+						supplier @380
 						vertices (list Points
 							(698,945)
 							(1119,874))
 						line_style 6144
-						label (object SegLabel @374
+						label (object SegLabel @383
 							quid "4EAB8F6F0021"
 							pos (795,959)
 							positionBySuperclass FALSE
@@ -4721,7 +4875,7 @@
 							pctDist 0.218579
 							height 30
 							orientation 1))
-					(object ClassView "Class" "Logical View::Global" @375
+					(object ClassView "Class" "Logical View::Global" @384
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
@@ -4746,84 +4900,84 @@
 						height 302
 						annotation 8
 						autoResize TRUE)
-					(object UsesView "" @376
+					(object UsesView "" @385
 						quid "4EAB8F7E0138"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4EAB8F7E02AF"
-						client @371
-						supplier @375
+						client @380
+						supplier @384
 						vertices (list Points
 							(1702,575)
 							(1986,334))
 						line_style 6144)
-					(object CapsuleVw "Console" @377
+					(object CapsuleVw "Console" @386
 						ShowCompartmentStereotypes TRUE
 						IncludeAttribute TRUE
 						IncludeOperation TRUE
 						showAggregations TRUE
 						quid "4EACBDA50151"
-						pos (2231,831)
+						pos (2231,834)
 						label (object ItemLabel
 							quid "4EACBDA50152"
-							pos (2009,712)
-							max_width 444
+							pos (1945,660)
+							max_width 572
 							label "Console")
 						stereotype (object ItemLabel
 							quid "4EACBDA50153"
-							pos (2009,671)
+							pos (1945,623)
 							anchor 10
-							max_width 444
+							max_width 572
 							label "<<Capsule>>")
 						icon_style "Decoration"
 						quidu "4EAC9F9702E7"
 						compartment (object Compartment
 							quid "4EACBDA50154"
-							pos (2009,774)
+							pos (1945,718)
 							anchor 2
-							nlines 8
-							max_width 450
+							nlines 11
+							max_width 569
 							justify 1)
-						width 462
-						height 478
+						width 590
+						height 579
 						annotation 8
 						autoResize TRUE
 						showPorts TRUE)
-					(object CapsuleRoleRelVw ":Structure:console" @378
+					(object CapsuleRoleRelVw ":Structure:console" @387
 						quid "4EACBDA50170"
 						uses_fill_color FALSE
 						quidu "4EAC9FBD0047"
-						label (object SegLabel @379
+						label (object SegLabel @388
 							quid "4EACBDA50171"
-							pos (1911,870)
+							pos (1878,871)
 							max_width 150
 							label "console"
-							pctDist 0.295817
-							height 42)
-						client @377
-						supplier @371
+							pctDist 0.242385
+							height 41)
+						client @386
+						supplier @380
 						vertices (list Points
-							(1999,828)
-							(1702,827))
+							(1935,831)
+							(1702,828))
 						line_style 6144
-						label (object SegLabel @380
+						label (object SegLabel @389
 							quid "4EACBDA50172"
-							pos (1931,882)
+							pos (1931,884)
 							hidden TRUE
 							anchor 1
 							max_width 15
 							label ""
-							pctDist 0.228341
-							height 54))
-					(object UsesView "" @381
+							pctDist 0.014236
+							height 53))
+					(object UsesView "" @390
 						quid "4EACBDB401AF"
 						stereotype TRUE
 						uses_fill_color FALSE
 						quidu "4EACBDB40364"
-						client @377
-						supplier @375
+						client @386
+						supplier @384
 						vertices (list Points
-							(2206,591)
+							(2201,544)
 							(2181,334))
 						line_style 6144)))))
 	root_subsystem (object SubSystem "Component View"
