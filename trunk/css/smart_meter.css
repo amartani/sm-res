@@ -1,0 +1,68 @@
+html, body {
+  margin:           0;
+  padding:          0;
+  font-family:      Verdana;
+  background-color: #006600;
+  
+}
+
+table, table h1 {
+  font-size: 100%;
+}
+
+.div_table{
+  margin-bottom: 30px;
+}
+
+.content_box {
+  width:            800px;
+  min-height:       400px;
+  margin:           100px auto;
+  border:           3px double #003300;
+  background-color: #66CC66;
+}
+
+.content_red_box{
+  width:            800px;
+  height:           400px;
+  margin:           100px auto;
+  border:           3px double #003300;
+  background-color: #CC6666;
+}
+
+h1 {
+  padding:          20px;
+  font-size:        32px;
+  margin-top:       0px;
+  background-color: #339933;
+}
+
+.red_h1 {
+  background-color: #993333;
+}
+
+h2 {
+  padding: 0px 20px 0px 20px;
+}
+
+.left_box {
+  float:        left;
+  width:        230px;
+  padding-left: 30px;
+}
+
+.right_box {
+  float:        left;
+  width:        490px;
+  padding-left: 30px;
+}
+
+#auth_form #user, #auth_form #pass{
+  width:  200px;
+  height: 30px;
+}
+
+#auth_form #submit{
+  width:     200px;
+  font-size: 16px;
+}
