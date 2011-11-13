@@ -10,10 +10,10 @@ function validate_user(form){
 
       var redirected = false;
       for(var i = 0; 2*i < usuarios.length; i++){
+        if( !usuarios[parseInt(i*2)] || !usuarios[parseInt(i*2+1)]){ break; }
+
         var user     = usuarios[parseInt(i*2)].replace(/(\r\n|\n|\r)/gm,"");
         var password = usuarios[parseInt(i*2+1)].replace(/(\r\n|\n|\r)/gm,"");
-
-        if(!password){ break; }
 
         if(attempt_user == user && attempt_password == password){
           redirected = true;
@@ -21,7 +21,7 @@ function validate_user(form){
           break;
         }
       }
-      if(!redirected){ window.location.replace("auth_error.html") }
+      if(redirected == false){ window.location.replace("auth_error.html") }
     }
   });
 
