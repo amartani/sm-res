@@ -206,6 +206,12 @@
 						initv "10"
 						type "int"
 						scope "Classifier"
+						visibility "Public")
+					(object ClassAttribute "temEnergia"
+						quid "4EC04D9403DE"
+						initv "true"
+						type "bool"
+						scope "Classifier"
 						visibility "Public"))
 				operations (list Operations
 					(object Operation "updateConsumo"
@@ -482,19 +488,21 @@
 								action (object Action
 									quid "4E9A9E470096"
 									body 
-|Global::updateConsumo(consumo, tipo, idPC);
-|consumoPort.value(consumo).send();
+|if (Global::temEnergia)
+|{
+|	Global::updateConsumo(consumo, tipo, idPC);
+|	consumoPort.value(consumo).send();
 |
-|Global::consumoTotal += consumo;
+|	Global::consumoTotal += consumo;
 |
-|if (tipo == 1) {
-|	Global::consumoTipo1 += consumo;
-|} else if (tipo == 2) {
-|	Global::consumoTipo2 += consumo;
-|} else if (tipo == 3) {
-|	Global::consumoTipo3 += consumo;
+|	if (tipo == 1) {
+|		Global::consumoTipo1 += consumo;
+|	} else if (tipo == 2) {
+|		Global::consumoTipo2 += consumo;
+|	} else if (tipo == 3) {
+|		Global::consumoTipo3 += consumo;
+|	}
 |}
-|
 									)
 								eventGuards (list eventGuardsList
 									(object EventGuard
@@ -4997,6 +5005,7 @@
 									quid "4EBDD4190399"
 									body 
 |temEnergia = true;
+|Global::temEnergia = true;
 |
 |logar("Energia voltou, bateria carregando");
 |
@@ -5020,6 +5029,7 @@
 									quid "4EBDE2D100CB"
 									body 
 |temEnergia = false;
+|Global::temEnergia = false;
 |
 |logar("Energia caiu, bateria descarregando");
 |
@@ -5063,66 +5073,71 @@
 						(object StateView "StartState" "Initial" @376
 							quid "4EBDD0F90056"
 							pos (180,180)
-							quidu "4EBDD0F90051")
+							quidu "4EBDD0F90051"
+							positionBySuperclass FALSE)
 						(object StateView "Normal" "Verificar" @377
 							quid "4EBDD18F001F"
-							pos (440,314)
+							pos (440,362)
 							quidu "4EBDD18F002E"
 							label (object ItemLabel
 								quid "4EBDD18F002F"
-								pos (440,269)
+								pos (440,317)
 								max_width 119)
+							positionBySuperclass FALSE
 							boundIcons (list boundIconsList
 								(object JuncPtVw ":TOP:Verificar:J4EBDD195037B" @378
 									quid "4EBDD1950383"
-									pos (320,271)
+									pos (331,283)
 									quidu "4EBDD195037B"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDD1A4038C" @379
 									quid "4EBDD1A40399"
-									pos (463,404)
+									pos (463,452)
 									quidu "4EBDD1A4038C"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDD1A4039A" @380
 									quid "4EBDD1A4039E"
-									pos (367,404)
+									pos (367,452)
 									quidu "4EBDD1A4039A"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDD3950372" @381
 									quid "4EBDD3950376"
-									pos (559,351)
+									pos (560,406)
 									quidu "4EBDD3950372"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDD3AC0000" @382
 									quid "4EBDD3AC0004"
-									pos (559,271)
+									pos (559,319)
 									quidu "4EBDD3AC0000"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDE2C102FF" @383
 									quid "4EBDE2C10303"
-									pos (557,382)
+									pos (557,430)
 									quidu "4EBDE2C102FF"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDE2C10304" @384
 									quid "4EBDE2C10308"
-									pos (530,403)
+									pos (527,452)
 									quidu "4EBDE2C10304"
 									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDF086010B" @385
 									quid "4EBDF086010F"
-									pos (431,223)
+									pos (431,271)
 									quidu "4EBDF086010B"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE)
 								(object JuncPtVw ":TOP:Verificar:J4EBDF0860110" @386
 									quid "4EBDF0860114"
-									pos (511,223)
+									pos (511,271)
 									quidu "4EBDF0860110"
+									positionBySuperclass FALSE
 									boundIconAutoAdjust TRUE))
 							statediagram (object State_Diagram ""
 								quid "4EBDD195037C"
@@ -5238,15 +5253,17 @@
 							quidu "4EBDD195037A"
 							label (object SegLabel @408
 								quid "4EBDD1950384"
-								pos (283,193)
+								pos (286,199)
+								positionBySuperclass FALSE
 								max_width 75
-								pctDist 0.506641
+								pctDist 0.487029
 								height 44)
+							positionBySuperclass FALSE
 							client @376
 							supplier @378
 							vertices (list Points
-								(204,195)
-								(312,265))
+								(203,195)
+								(323,277))
 							line_style 6144)
 						(object TransView ":TOP:Verificar:J4EBDD1A4038C:Incrementar" @409
 							quid "4EBDD1A4038A"
@@ -5254,7 +5271,7 @@
 							quidu "4EBDD1A4038B"
 							label (object SegLabel @410
 								quid "4EBDD1A4039F"
-								pos (427,527)
+								pos (427,575)
 								positionBySuperclass FALSE
 								max_width 175
 								pctDist 0.526793
@@ -5263,10 +5280,10 @@
 							client @379
 							supplier @380
 							vertices (list Points
-								(463,412)
-								(463,478)
-								(409,484)
-								(370,411))
+								(463,460)
+								(463,526)
+								(409,532)
+								(370,459))
 							line_style 6144)
 						(object TransView ":TOP:Verificar:J4EBDE2C102FF:alteraNaoTemEnergia" @411
 							quid "4EBDE2C102FD"
@@ -5274,19 +5291,19 @@
 							quidu "4EBDE2C102FE"
 							label (object SegLabel @412
 								quid "4EBDE2C10309"
-								pos (642,451)
+								pos (642,501)
 								positionBySuperclass FALSE
 								max_width 322
-								pctDist 1.497345
-								height 17
+								pctDist 1.506808
+								height 16
 								orientation 1)
 							positionBySuperclass FALSE
 							client @383
 							supplier @384
 							vertices (list Points
-								(564,385)
-								(622,419)
-								(537,404))
+								(557,430)
+								(619,468)
+								(534,453))
 							line_style 6144)
 						(object TransView ":TOP:Verificar:J4EBDD3AC0000:alteraTemEnergia" @413
 							quid "4EBDD395036B"
@@ -5294,19 +5311,19 @@
 							quidu "4EBDD395036C"
 							label (object SegLabel @414
 								quid "4EBDD3950377"
-								pos (673,334)
+								pos (674,385)
 								positionBySuperclass FALSE
 								max_width 259
-								pctDist 0.608491
+								pctDist 0.606335
 								height 39)
 							positionBySuperclass FALSE
 							client @382
 							supplier @381
 							vertices (list Points
-								(567,271)
-								(634,272)
-								(634,350)
-								(567,350))
+								(559,319)
+								(635,327)
+								(635,405)
+								(568,405))
 							line_style 6144)
 						(object TransView ":TOP:Verificar:J4EBDF086010B:imprimeLog" @415
 							quid "4EBDF0860109"
@@ -5314,17 +5331,19 @@
 							quidu "4EBDF086010A"
 							label (object SegLabel @416
 								quid "4EBDF0860119"
-								pos (471,104)
+								pos (471,152)
+								positionBySuperclass FALSE
 								max_width 166
 								pctDist 0.500000
 								height 44)
+							positionBySuperclass FALSE
 							client @385
 							supplier @386
 							vertices (list Points
-								(431,213)
-								(431,148)
-								(511,148)
-								(511,213))
+								(431,261)
+								(431,196)
+								(511,196)
+								(511,261))
 							line_style 6144))
 					filterFlags 1)
 				language "C++"
@@ -5741,23 +5760,23 @@
 						IncludeOperation TRUE
 						showAggregations TRUE
 						quid "4EAB8F7A004E"
-						pos (2171,305)
+						pos (2169,318)
 						label (object ItemLabel
 							quid "4EAB8F7A004F"
-							pos (1929,9)
-							max_width 484
+							pos (1945,26)
+							max_width 448
 							label "Global")
 						icon_style "Decoration"
 						quidu "4E9BA92F0273"
 						compartment (object Compartment
 							quid "4EAB8F7A0050"
-							pos (1929,71)
+							pos (1945,84)
 							anchor 2
-							nlines 13
-							max_width 490
+							nlines 14
+							max_width 444
 							justify 1)
-						width 502
-						height 610
+						width 466
+						height 603
 						annotation 8
 						autoResize TRUE)
 					(object UsesView "" @443
@@ -5768,8 +5787,8 @@
 						client @438
 						supplier @442
 						vertices (list Points
-							(1702,624)
-							(1919,476))
+							(1702,629)
+							(1935,473))
 						line_style 6144)
 					(object CapsuleVw "Console" @444
 						ShowCompartmentStereotypes TRUE
@@ -5837,8 +5856,8 @@
 						client @444
 						supplier @442
 						vertices (list Points
-							(2194,512)
-							(2206,610))
+							(2192,512)
+							(2206,619))
 						line_style 6144)))))
 	root_subsystem (object SubSystem "Component View"
 		quid "4E9A9C14001D"
