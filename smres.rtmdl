@@ -4663,7 +4663,8 @@
 													pos (991,1045)
 													label (object ItemLabel
 														quid "4EBDBBA5012D"
-														pos (1031,1075))))
+														pos (1031,1075)
+														max_width 197)))
 											(object JuncPtVw ":TOP:Inicio:J4EBDBBA5012F" @360
 												quid "4EBDBBA50138"
 												pos (479,1135)
@@ -4673,7 +4674,8 @@
 													pos (479,1045)
 													label (object ItemLabel
 														quid "4EBDBBA5013A"
-														pos (519,1075))))))
+														pos (519,1075)
+														max_width 197)))))
 									(object StateView "StartState" "Initial" @362
 										quid "4EACA2E60156"
 										pos (180,180)
@@ -5749,10 +5751,10 @@
 						quidu "4E9BA92F0273"
 						compartment (object Compartment
 							quid "4EAB8F7A0050"
-							pos (1929,67)
+							pos (1929,71)
 							anchor 2
 							nlines 13
-							max_width 481
+							max_width 490
 							justify 1)
 						width 502
 						height 610
