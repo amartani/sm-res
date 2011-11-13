@@ -131,6 +131,15 @@
 		exportControl "Public"
 		logical_models (list unit_reference_list
 			(object Class "Global"
+				attributes (list Attribute_Set
+					(object Attribute
+						tool "OT::Cpp"
+						name "HeaderPreface"
+						value (value Text 
+|#include <stdio.h>
+|#include <time.h>
+|#include <string.h>
+						)))
 				quid "4E9BA92F0273"
 				class_attributes (list class_attribute_list
 					(object ClassAttribute "MAXUNITS"
@@ -164,7 +173,7 @@
 						visibility "Public")
 					(object ClassAttribute "tempoBateria"
 						quid "4EBDD68D02DE"
-						initv "180"
+						initv "30"
 						type "int"
 						scope "Classifier"
 						visibility "Public")
@@ -185,7 +194,66 @@
 						initv "0"
 						type "int"
 						scope "Classifier"
+						visibility "Public")
+					(object ClassAttribute "consumoTotal"
+						quid "4EBFE9970271"
+						initv "1000"
+						type "int"
+						scope "Classifier"
+						visibility "Public")
+					(object ClassAttribute "tick_counter"
+						quid "4EBFF60703D8"
+						initv "10"
+						type "int"
+						scope "Classifier"
 						visibility "Public"))
+				operations (list Operations
+					(object Operation "updateConsumo"
+						quid "4EBFB76A00CB"
+						body 
+|char timestr[30];
+|FILE *fp;
+|time_t rawtime;
+|
+|Global::tick_counter++;
+|
+|printf("Consumo no Ponto %d: %d\n", idPC, consumo);
+|
+|fp = fopen("consumo.csv", "a+");
+|fseek(fp, 0, SEEK_END);
+|time(&rawtime);
+|strcpy(timestr, ctime(&rawtime));
+|timestr[3]  = '\0';
+|timestr[7]  = '\0';
+|timestr[10] = '\0';
+|timestr[19] = '\0';
+|timestr[24] = '\0';
+|// Sun Nov 13 15:45:32 2011;
+|// 012345678901234567890123
+|
+|// year,           month,          day,            hour
+|// &(timestr[20]), &(timestr[4]), &(timestr[8]), &(timestr[11]),
+|fprintf(fp, "%d,%s,%s,%s,%s,%d,%d,%d,%d,%d\n", Global::tick_counter, &(timestr[20]), &(timestr[4]), &(timestr[8]), &(timestr[11]), Global::tempoBateria, idPC, tipoPC, consumo, Global::consumoTotal);
+|
+|// fprintf(fp, "%d,%s,%d,%d,%d,%d,%d\n", Global::tick_counter, timestr, Global::tempoBateria, idPC, tipoPC, consumo, Global::consumoTotal);
+|fflush(fp);
+|fclose(fp);
+|
+|
+|
+|
+						
+						parameters (list Parameters
+							(object Parameter "consumo"
+								quid "4EBFB79802BF"
+								type "int")
+							(object Parameter "tipoPC"
+								quid "4EBFF8B103D8"
+								type "int")
+							(object Parameter "idPC"
+								quid "4EBFB7AB0109"
+								type "int"))
+						scope "Classifier"))
 				statemachine (object State_Machine
 					quid "4EBFAD8102EE"
 					State (object State "TOP"
@@ -414,8 +482,10 @@
 								action (object Action
 									quid "4E9A9E470096"
 									body 
-|cout << "Consumo no Ponto " << idPC << ": " << consumo << endl;
+|Global::updateConsumo(consumo, tipo, idPC);
 |consumoPort.value(consumo).send();
+|
+|Global::consumoTotal += consumo;
 |
 |if (tipo == 1) {
 |	Global::consumoTipo1 += consumo;
@@ -5669,11 +5739,11 @@
 						IncludeOperation TRUE
 						showAggregations TRUE
 						quid "4EAB8F7A004E"
-						pos (2166,232)
+						pos (2171,305)
 						label (object ItemLabel
 							quid "4EAB8F7A004F"
 							pos (1929,9)
-							max_width 474
+							max_width 484
 							label "Global")
 						icon_style "Decoration"
 						quidu "4E9BA92F0273"
@@ -5681,11 +5751,11 @@
 							quid "4EAB8F7A0050"
 							pos (1929,67)
 							anchor 2
-							nlines 10
+							nlines 13
 							max_width 481
 							justify 1)
-						width 492
-						height 464
+						width 502
+						height 610
 						annotation 8
 						autoResize TRUE)
 					(object UsesView "" @443
@@ -5696,8 +5766,8 @@
 						client @438
 						supplier @442
 						vertices (list Points
-							(1702,594)
-							(1919,423))
+							(1702,624)
+							(1919,476))
 						line_style 6144)
 					(object CapsuleVw "Console" @444
 						ShowCompartmentStereotypes TRUE
@@ -5765,8 +5835,8 @@
 						client @444
 						supplier @442
 						vertices (list Points
-							(2196,512)
-							(2191,464))
+							(2194,512)
+							(2206,610))
 						line_style 6144)))))
 	root_subsystem (object SubSystem "Component View"
 		quid "4E9A9C14001D"
